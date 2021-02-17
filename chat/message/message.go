@@ -114,6 +114,7 @@ func (m PublicMsg) Render(t *Theme) string {
 
 // RenderFor renders the message for other users to see.
 func (m PublicMsg) RenderFor(cfg UserConfig) string {
+	m.body = insertEmojis(m.body)
 	if cfg.Highlight == nil || cfg.Theme == nil {
 		return m.Render(cfg.Theme)
 	}
@@ -126,14 +127,17 @@ func (m PublicMsg) RenderFor(cfg UserConfig) string {
 	if cfg.Bell {
 		body += Bel
 	}
+
 	return fmt.Sprintf("%s: %s", cfg.Theme.ColorName(m.from), body)
 }
 
 // RenderSelf renders the message for when it's echoing your own message.
 func (m PublicMsg) RenderSelf(cfg UserConfig) string {
+	m.body = insertEmojis(m.body)
 	if cfg.Theme == nil {
 		return fmt.Sprintf("[%s] %s", m.from.Name(), m.body)
 	}
+
 	return fmt.Sprintf("[%s] %s", cfg.Theme.ColorName(m.from), m.body)
 }
 
@@ -191,6 +195,7 @@ func (m PrivateMsg) From() *User {
 }
 
 func (m PrivateMsg) Render(t *Theme) string {
+	m.body = insertEmojis(m.body)
 	s := fmt.Sprintf("[PM from %s] %s", m.from.Name(), m.body)
 	if t == nil {
 		return s
