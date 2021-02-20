@@ -92,6 +92,12 @@ func (c Commands) Help(showOp bool) string {
 	if showOp {
 		help += message.Newline + "-> Operator commands:" + message.Newline + NewCommandsHelp(op).String()
 	}
+
+	// Show emoji help
+	help += message.Newline + "-> Emojis:" + message.Newline
+	help += NewGenericHelp(message.Emojis).String()
+
+
 	return help
 }
 

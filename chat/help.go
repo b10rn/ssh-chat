@@ -18,6 +18,22 @@ type help struct {
 	prefixWidth int
 }
 
+// NewGenericHelp creates a generic help container from strings.
+func NewGenericHelp(sarr []string) fmt.Stringer {
+	h := help{
+		items: []helpItem{},
+	}
+	for i := 0; i < len(sarr); i += 2 {
+		if len(sarr) - 1 < i + 1 {
+			break;
+		}
+
+		h.add(helpItem{sarr[i], sarr[i+1]})
+	}
+
+	return &h
+}
+
 // NewCommandsHelp creates a help container from a commands container.
 func NewCommandsHelp(c []*Command) fmt.Stringer {
 	lookup := map[string]struct{}{}
