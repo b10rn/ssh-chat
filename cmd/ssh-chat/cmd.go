@@ -2,8 +2,10 @@ package main
 
 import (
 	"bufio"
+	"encoding/csv"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -35,6 +37,7 @@ type Options struct {
 	Identity   string `short:"i" long:"identity" description:"Private key to identify server with." default:"~/.ssh/id_rsa"`
 	Log        string `long:"log" description:"Write chat log to this file."`
 	Motd       string `long:"motd" description:"Optional Message of the Day file."`
+	Emojis     string `long:"emojis" description:"Optional csv file of emojis."`
 	Pprof      int    `long:"pprof" description:"Enable pprof http server for profiling."`
 	Verbose    []bool `short:"v" long:"verbose" description:"Show verbose logging."`
 	Version    bool   `long:"version" description:"Print version and exit."`
@@ -220,6 +223,32 @@ func main() {
 			fail(7, "Failed to load MOTD file: %v\n", err)
 		} else {
 			host.SetMotd(motdString)
+		}
+	}
+
+	if options.Emojis != "" {
+		var emojis []string
+		var emojisString string
+		emojisBytes, err := ioutil.ReadFile(options.Emojis)
+		if err != nil {
+			fail(0xDD, "Failed to load emojis file: %v\n", err)
+		} else {
+			emojisString = string(emojisBytes)
+			r := csv.NewReader(strings.NewReader(emojisString))
+			for {
+				emojiPair, err := r.Read()
+				if err == io.EOF {
+					break
+				}
+				if err != nil {
+					fail(0xDD, "Failed parsing emojis file: %v\n", err)
+				}
+				if len(emojiPair) < 2 {
+					continue;
+				}
+				emojis = append(emojis, ":" + emojiPair[0] + ":", emojiPair[1])
+			}
+			message.Emojis = emojis
 		}
 	}
 
