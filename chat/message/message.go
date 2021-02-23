@@ -135,10 +135,10 @@ func (m PublicMsg) RenderFor(cfg UserConfig) string {
 func (m PublicMsg) RenderSelf(cfg UserConfig) string {
 	m.body = insertEmotes(m.body)
 	if cfg.Theme == nil {
-		return fmt.Sprintf("[%s] %s", m.from.Name(), m.body)
+		return fmt.Sprintf("%s: %s", m.from.Name(), m.body)
 	}
 
-	return fmt.Sprintf("[%s] %s", cfg.Theme.ColorName(m.from), m.body)
+	return fmt.Sprintf("%s: %s", cfg.Theme.ColorName(m.from), m.body)
 }
 
 func (m PublicMsg) String() string {
