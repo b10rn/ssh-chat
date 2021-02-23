@@ -26,7 +26,7 @@ func GetPrompt(user *message.User) string {
 	if cfg.Theme != nil {
 		name = cfg.Theme.ColorName(user)
 	}
-	return fmt.Sprintf("[%s] ", name)
+	return fmt.Sprintf("%s> ", name)
 }
 
 // Host is the bridge between sshd and chat modules
