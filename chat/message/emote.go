@@ -4,7 +4,7 @@ import(
 	"strings"
 )
 
-var Emojis = []string{
+var Emotes = []string{
 	":sleeping:", "( ᴗ˳ᴗ) zZ",
 	":kiss:",     "( ˘³˘)",
 	":relieved:", "( ˘ω˘)",
@@ -12,8 +12,8 @@ var Emojis = []string{
 	":unamused:", "( ¬､¬)",
 }
 
-func insertEmojis(body string) string {
-	r := strings.NewReplacer(Emojis...)
+func insertEmotes(body string) string {
+	r := strings.NewReplacer(Emotes...)
 	body = r.Replace(body)
 	return body
 }

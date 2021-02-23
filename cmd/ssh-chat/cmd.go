@@ -37,7 +37,7 @@ type Options struct {
 	Identity   string `short:"i" long:"identity" description:"Private key to identify server with." default:"~/.ssh/id_rsa"`
 	Log        string `long:"log" description:"Write chat log to this file."`
 	Motd       string `long:"motd" description:"Optional Message of the Day file."`
-	Emojis     string `long:"emojis" description:"Optional csv file of emojis."`
+	Emotes     string `long:"emotes" description:"Optional csv file of emotes."`
 	Pprof      int    `long:"pprof" description:"Enable pprof http server for profiling."`
 	Verbose    []bool `short:"v" long:"verbose" description:"Show verbose logging."`
 	Version    bool   `long:"version" description:"Print version and exit."`
@@ -226,29 +226,29 @@ func main() {
 		}
 	}
 
-	if options.Emojis != "" {
-		var emojis []string
-		var emojisString string
-		emojisBytes, err := ioutil.ReadFile(options.Emojis)
+	if options.Emotes != "" {
+		var emotes []string
+		var emotesString string
+		emotesBytes, err := ioutil.ReadFile(options.Emotes)
 		if err != nil {
-			fail(0xDD, "Failed to load emojis file: %v\n", err)
+			fail(0xDD, "Failed to load emotes file: %v\n", err)
 		} else {
-			emojisString = string(emojisBytes)
-			r := csv.NewReader(strings.NewReader(emojisString))
+			emotesString = string(emotesBytes)
+			r := csv.NewReader(strings.NewReader(emotesString))
 			for {
-				emojiPair, err := r.Read()
+				emotePair, err := r.Read()
 				if err == io.EOF {
 					break
 				}
 				if err != nil {
-					fail(0xDD, "Failed parsing emojis file: %v\n", err)
+					fail(0xDD, "Failed parsing emotes file: %v\n", err)
 				}
-				if len(emojiPair) < 2 {
+				if len(emotePair) < 2 {
 					continue;
 				}
-				emojis = append(emojis, ":" + emojiPair[0] + ":", emojiPair[1])
+				emotes = append(emotes, ":" + emotePair[0] + ":", emotePair[1])
 			}
-			message.Emojis = emojis
+			message.Emotes = emotes
 		}
 	}
 

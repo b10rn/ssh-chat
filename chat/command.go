@@ -93,11 +93,6 @@ func (c Commands) Help(showOp bool) string {
 		help += message.Newline + "-> Operator commands:" + message.Newline + NewCommandsHelp(op).String()
 	}
 
-	// Show emoji help
-	help += message.Newline + "-> Emojis:" + message.Newline
-	help += NewGenericHelp(message.Emojis).String()
-
-
 	return help
 }
 
@@ -461,6 +456,16 @@ func InitCommands(c *Commands) {
 				}
 			}
 			room.Send(message.NewSystemMsg(fmt.Sprintf("Focusing: %s", strings.Join(focused, ", ")), msg.From()))
+			return nil
+		},
+	})
+
+	c.Add(Command{
+		Prefix:     "/emotes",
+		Help: "List emotes.",
+		Handler: func(room *Room, msg message.CommandMsg) error {
+			help := "Available emotes:" + message.Newline + NewGenericHelp(message.Emotes).String()
+			room.Send(message.NewSystemMsg(help, msg.From()))
 			return nil
 		},
 	})
