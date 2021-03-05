@@ -1,6 +1,8 @@
 package message
 
 import (
+	"crypto/md5"
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"io"
@@ -49,7 +51,20 @@ func NewUser(identity Identifier) *User {
 		Ignored:    set.New(),
 		Focused:    set.New(),
 	}
-	u.setColorIdx(rand.Int())
+
+	// Prefer the user's fingerprint, but fall back to its id
+	// for usage as the random seed
+	stringSeed := identity.Fingerprint()
+	if stringSeed == "" {
+		stringSeed = identity.ID()
+	}
+
+	// Create a new random generator using the above seed and set the user's id color
+	digest := md5.New()
+	io.WriteString(digest, identity.Fingerprint())
+	seed := binary.BigEndian.Uint64(digest.Sum(nil))
+	generator := rand.New(rand.NewSource(int64(seed)))
+	u.setColorIdx(generator.Int())
 
 	return &u
 }
@@ -90,7 +105,6 @@ func (u *User) SetConfig(cfg UserConfig) {
 // Rename the user with a new Identifier.
 func (u *User) SetID(id string) {
 	u.Identifier.SetID(id)
-	u.setColorIdx(rand.Int())
 
 	if u.OnChange != nil {
 		u.OnChange()

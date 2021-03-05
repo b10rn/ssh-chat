@@ -53,8 +53,7 @@ func TestRenderTimestamp(t *testing.T) {
 	u.Send(m)
 	u.HandleMsg(u.ConsumeOne())
 
-	s.Read(&actual)
-	expected = []byte(`[38;05;245mAA:BB` + Reset + `  [[38;05;88mfoo[0m] hello` + Newline)
+	expected = []byte(`[38;05;245mAA:BB` + Reset + `  [[38;05;117mfoo[0m] hello` + Newline)
 	if !reflect.DeepEqual(actual, expected) {
 		t.Errorf("Wrong screen output:\n Got: `%q`;\nWant: `%q`", actual, expected)
 	}
