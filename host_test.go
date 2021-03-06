@@ -60,7 +60,7 @@ func TestHostGetPrompt(t *testing.T) {
 	u := message.NewUser(&Identity{id: "foo"})
 
 	actual = GetPrompt(u)
-	expected = "[foo] "
+	expected = "foo> "
 	if actual != expected {
 		t.Errorf("Invalid host prompt:\n Got: %q;\nWant: %q", actual, expected)
 	}
@@ -69,7 +69,7 @@ func TestHostGetPrompt(t *testing.T) {
 		Theme: &message.Themes[0],
 	})
 	actual = GetPrompt(u)
-	expected = "[\033[38;05;88mfoo\033[0m] "
+	expected = "\x1b[38;05;117mfoo\x1b[0m> "
 	if actual != expected {
 		t.Errorf("Invalid host prompt:\n Got: %q;\nWant: %q", actual, expected)
 	}
@@ -113,7 +113,7 @@ func TestHostNameCollision(t *testing.T) {
 			actual = scanner.Text()
 			// This check has to happen second because prompt doesn't always
 			// get set before the first message.
-			if !strings.HasPrefix(actual, "[foo] ") {
+			if !strings.HasPrefix(actual, "foo> ") {
 				t.Errorf("First client failed to get 'foo' name: %q", actual)
 			}
 			actual = stripPrompt(actual)
@@ -145,7 +145,7 @@ func TestHostNameCollision(t *testing.T) {
 		scanner.Scan()
 
 		actual := scanner.Text()
-		if !strings.HasPrefix(actual, "[Guest1] ") {
+		if !strings.HasPrefix(actual, "Guest1> ") {
 			t.Errorf("Second client did not get Guest1 name: %q", actual)
 		}
 		return nil

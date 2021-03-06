@@ -5,6 +5,7 @@ type Identifier interface {
 	ID() string
 	SetID(string)
 	Name() string
+	Fingerprint() string
 }
 
 // SimpleID is a simple Identifier implementation used for testing.
@@ -18,6 +19,11 @@ func (i SimpleID) ID() string {
 // SetID is a no-op
 func (i SimpleID) SetID(s string) {
 	// no-op
+}
+
+// Fingerprint returns an empty string
+func (i SimpleID) Fingerprint() string {
+	return ""
 }
 
 // Name returns the ID
