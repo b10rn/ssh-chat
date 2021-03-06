@@ -41,11 +41,16 @@ func (i *Identity) SetID(id string) {
 
 // Fingerprint returns the user's public key fingerprint. Returns an empty string if non is set
 func (i *Identity) Fingerprint() string {
-	if i.PublicKey() == nil {
+	if i.Connection == nil {
 		return ""
 	}
 
-	return sshd.Fingerprint(i.PublicKey())
+	publicKey := i.PublicKey()
+	if publicKey == nil {
+		return ""
+	}
+
+	return sshd.Fingerprint(publicKey)
 }
 
 // SetName Changes the Identity's name
